@@ -1,0 +1,21 @@
+{
+    "name": "johnproza/yii2-gallery",
+    "description": "Images Gallery",
+    "type": "yii2-extension",
+    "keywords": ["yii2","extension","gallery"],
+    "license": "GPL-3.0+",
+    "authors": [
+        {
+            "name": "Ivan Proza",
+            "email": "ivan.proza@gmail.com"
+        }
+    ],
+    "require": {
+        "yiisoft/yii2": "~2.0.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "oboom\\gallery\\": ""
+        }
+    }
+}
