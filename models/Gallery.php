@@ -9,13 +9,13 @@ use Yii;
  *
  * @property int $id
  * @property string $thumb_path
- * @property string $big_path
+ * @property string $path
  * @property int $is_main
  * @property string $alt
  * @property string $title
  * @property int $sort
  * @property int $assign_id
- * @property string $type_id
+ * @property string $type
  */
 class Gallery extends \yii\db\ActiveRecord
 {
@@ -34,10 +34,10 @@ class Gallery extends \yii\db\ActiveRecord
     {
         return [
             [['is_main', 'sort', 'assign_id'], 'integer'],
-            [['type_id'], 'required'],
-            [['thumb_path', 'big_path'], 'string', 'max' => 60],
+            [['type'], 'required'],
+            [['thumb_path', 'path'], 'string', 'max' => 200],
             [['alt', 'title'], 'string', 'max' => 120],
-            [['type_id'], 'string', 'max' => 45],
+            [['type'], 'string', 'max' => 45],
         ];
     }
 
@@ -49,13 +49,17 @@ class Gallery extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'thumb_path' => 'Thumb Path',
-            'big_path' => 'Big Path',
+            'path' => 'Big Path',
             'is_main' => 'Is Main',
             'alt' => 'Alt',
             'title' => 'Title',
             'sort' => 'Sort',
             'assign_id' => 'Assign ID',
-            'type_id' => 'Type ID',
+            'type' => 'Type ID',
         ];
+    }
+
+    static function getData($id,$type){
+        return Gallery::find()->where(['assign_id'=>$id,'type'=>$type])->limit(1)->one();
     }
 }

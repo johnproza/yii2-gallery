@@ -8,7 +8,9 @@
     "authors": [
         {
             "name": "Ivan Proza",
-            "email": "ivan.proza@gmail.com"
+            "email": "ivan.proza@gmail.com",
+            "homepage": "https://github.com/johnproza/yii2-gallery",
+            "role": "developer"
         }
     ],
     "minimum-stability": "dev",
