@@ -22,6 +22,9 @@ class Gallery extends \yii\db\ActiveRecord
     /**
      * {@inheritdoc}
      */
+
+    public $upload;
+
     public static function tableName()
     {
         return 'gallery';
@@ -61,5 +64,9 @@ class Gallery extends \yii\db\ActiveRecord
 
     static function getData($id,$type){
         return Gallery::find()->where(['assign_id'=>$id,'type'=>$type])->limit(1)->one();
+    }
+
+    static function remove($id,$type){
+        return Gallery::deleteAll(['assign_id' =>$id, 'type'=>$type]);
     }
 }

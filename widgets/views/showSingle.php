@@ -12,6 +12,5 @@
 //FrontAssetsBundle::register($this);
 ?>
 <?if (!empty($data)):?>
-    <img src = "<?=Yii::$app->params['webUrl']['front'].$data->thumb_path;?>" />
-    <p><?=Yii::$app->params['webUrl']['front'];?></p>
+    <img src = "<?=Yii::$app->params['webUrl']['front'].$data->thumb_path;?>"  <?= $className!=null ? "class=".$className : false ;?> />
 <?endif;?>
