@@ -13,9 +13,11 @@ class BaseAssetsBundle extends AssetBundle
 {
     public $sourcePath = '@vendor/johnproza/yii2-gallery/assets';
     public $css = [
-        'css/style.css'
+        'css/style.css',
+        'css/cropper.min.css',
     ];
     public $js = [
+        'js/cropper.min.js',
         'js/script.js'
     ];
 

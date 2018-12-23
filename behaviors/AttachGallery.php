@@ -105,14 +105,11 @@ class AttachGallery extends Behavior
     public function checkFolder($path,$id, $type, $thumb=true){
         if(!is_dir($path.'/'.$type.'/'.$id)){
             FileHelper::createDirectory($path.'/'.$type.'/'.$id);
-            var_dump(FileHelper::createDirectory($path.'/'.$type.'/'.$id));
-
             $thumb==true ?  FileHelper::createDirectory($path.'/'.$type.'/'.$id.'/thumb') : null;
             return true;
         }
         else {
-            FileHelper::createDirectory($path.'/'.$type.'/'.$id);
-            //var_dump(is_dir($path.'/'.$type.'/'.$id), $path,$id,$type );
+
         }
 
         return true;

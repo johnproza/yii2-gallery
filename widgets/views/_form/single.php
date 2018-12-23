@@ -16,7 +16,13 @@ BaseAssetsBundle::register($this);
         <?endif;?>
     </div>
     <div class="col-lg-12 col-md-12">
-        <?= HTML::fileInput('Gallery[upload]');?>
+
+            <div class="custom-file">
+                <?= HTML::fileInput('Gallery[upload]',null,['class'=>'custom-file-input','id'=>'upload']);?>
+                <label class="custom-file-label" for="upload"><i class="icon ion-md-cloud-upload iconBase"></i>Выбрать файл</label>
+            </div>
+        <div class="input-group"></div>
+
     </div>
 </div>
 
