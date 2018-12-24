@@ -9,5 +9,5 @@
 
 //BaseAssetsBundle::register($this);
 ?>
-<?= $this->render('_form/single', ['model' => $data,  'form'=> $form]); ?>
+<?= $this->render('_form/single', ['model' => $data]); ?>
 

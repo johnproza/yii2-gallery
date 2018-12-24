@@ -28,6 +28,7 @@ class AttachGallery extends Behavior
 
     public function init()
     {
+
         if ($this->quality > 100) {
             $this->quality = 100;
         } elseif ($this->quality < 0) {
@@ -120,7 +121,7 @@ class AttachGallery extends Behavior
     }
 
     public function getWebPath(){
-        return explode('web',$this->mainPathUpload)[1].'/'.$this->type.'/'.$this->owner->id.'/';
+        return '/uploads/'.$this->type.'/'.$this->owner->id.'/';
     }
 
 
