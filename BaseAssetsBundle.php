@@ -14,16 +14,18 @@ class BaseAssetsBundle extends AssetBundle
     public $sourcePath = '@vendor/johnproza/yii2-gallery/assets';
     public $css = [
         'css/style.css',
-        'css/cropper.min.css',
+        //'css/cropper.min.css',
+        'css/jcrop.css',
     ];
     public $js = [
-        'js/cropper.min.js',
+        'js/jcrop.js',
+        //'js/cropper.min.js',
         'js/script.js'
     ];
 
     public $depends = [
         'yii\web\YiiAsset',
-        //'yii\bootstrap\BootstrapAsset',
+        //'yii\bootstrap\CanvasBlobAsset',
     ];
 
     public $publishOptions = [

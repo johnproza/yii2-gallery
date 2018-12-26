@@ -2,24 +2,53 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use oboom\gallery\BaseAssetsBundle;
+use kartik\file\FileInput;
+
 BaseAssetsBundle::register($this);
 ?>
 <div class="tabContent row">
 
 
     <div class="col-lg-12" id="gallery">
-        <?if (!empty($model)):?>
-            <div class="col-lg-2 col-md-3 col-sm-4 imgItem">
-                <img src="<?=Yii::$app->params['webUrl']['front'].$model->thumb_path?>">
-                <div class="imgBar"></div>
-            </div>
-        <?endif;?>
+        <ul class="list" id="galleryList">
+            <?if (!empty($model)):?>
+                <li>
+                    <img src="<?=Yii::$app->params['webUrl']['front'].$model->thumb_path?>">
+                </li>
+            <?endif;?>
+        </ul>
     </div>
     <div class="col-lg-12 col-md-12">
 
-            <div class="custom-file">
+            <div class="custom-file" id="gallery">
+<!--                --><?//= FileInput::widget([
+//                     //model'=>$model,
+//
+//                    'name' => 'Gallery[upload]',
+//                    'attribute' => 'upload',
+//                    'pluginOptions' => [
+//                        'showUpload' => false,
+//                        'browseLabel' => '',
+//                        'removeLabel' => '',
+//
+//                        'browseClass' => 'btn btn-primary btn-block',
+//                        'browseIcon' => '<i class="glyphicon glyphicon-camera"></i> ',
+//                        'browseLabel' =>  'Выбрать фото',
+//
+//                        'mainClass' => 'input-group-md',
+//                        'initialPreview'=>[
+//                            Yii::$app->params['webUrl']['front'].$model->thumb_path ? Yii::$app->params['webUrl']['front'].$model->thumb_path : false ,
+//                        ],
+//                        'options' => ['accept' => 'image/*'],
+//                        'initialPreviewAsData'=>true,
+//
+//
+//                    ]
+//                    ]);?>
                 <?= HTML::fileInput('Gallery[upload]',null,['class'=>'custom-file-input','id'=>'upload']);?>
-                <label class="custom-file-label" for="upload"><i class="icon ion-md-cloud-upload iconBase"></i>Выбрать файл</label>
+                <label class="custom-file-label" for="upload">
+                    <span id="uploadText">Выбрать файл</span>
+                </label>
             </div>
         <div class="input-group"></div>
 
