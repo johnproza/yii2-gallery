@@ -23,16 +23,20 @@ class AttachGallery extends Behavior
     public $mainPathUpload = 'frontend/web/uploads/';
     public $mode ='single';
     public $quality =100;
-    public $inputName = 'Gallery[upload]';
+    public $inputName = 'storage';
     public $type = null;
+    public $thumbSize = [
+        'x'=>300,
+        'y'=>300
+    ];
 
     public function init()
     {
 
         if ($this->quality > 100) {
-            $this->quality = 100;
+            $this->quality = 75;
         } elseif ($this->quality < 0) {
-            $this->quality = 0;
+            $this->quality = 75;
         }
 
     }
@@ -40,7 +44,9 @@ class AttachGallery extends Behavior
     public function events()
     {
         return [
-            ActiveRecord::EVENT_BEFORE_UPDATE => 'updateImages',
+            ActiveRecord::EVENT_BEFORE_UPDATE => 'setImages',
+            //ActiveRecord::EVENT_BEFORE_UPDATE => 'updateImages',
+            //ActiveRecord::EVENT_BEFORE_INSERT => 'setImages',
             ActiveRecord::EVENT_AFTER_INSERT => 'setImages',
             ActiveRecord::EVENT_BEFORE_DELETE => 'removeImages',
         ];
@@ -72,29 +78,61 @@ class AttachGallery extends Behavior
 
 
 
-    public function uploadImage($data,$id=null,$type=null){
-        if(!is_null($id) && !is_null($type)){
-            if($this->checkFolder($this->mainPathUpload,$id,$type, $this->thumb)){
+//    public function uploadImage($data,$id=null,$type=null){
+//        if(!is_null($id) && !is_null($type)){
+//            if($this->checkFolder($this->mainPathUpload,$id,$type, $this->thumb)){
+//
+//                $name = Yii::$app->security->generateRandomString(12);
+//                $path = $this->getPath().$name.'.'.$data[0]->extension;
+//
+//                $dbPath = $this->getWebPath().$name.'.'.$data[0]->extension;
+//                $dbThumbPath = null;
+//
+//
+//                if($this->thumb){
+//                    $thumbPath = $this->getPath().'thumb/'.$name.'.'.$data[0]->extension;
+//                    $dbThumbPath =$this->getWebPath().'thumb/'.$name.'.'.$data[0]->extension;
+//                    //var_dump($dbThumbPath.'jpg');
+//                    Image::crop($data[0]->tempName,$this->thumbSize['x'],$this->thumbSize['y'])
+//                        ->save($thumbPath); //['jpeg_quality' => 75]
+//                }
+//
+//                Image::resize($data[0]->tempName,1280)
+//                        ->save($path); //['png_compression_level' => 1-9]
+//
+//                $this->saveDB($dbPath,$dbThumbPath,$id);
+//            }
+//
+//            else {
+//                throw new \ErrorException('type and id are required attribute');
+//            }
+//        }
+//    }
+
+    public function uploadImage($data){
+        if(!is_null($this->owner->id) && !is_null($this->type)){
+            if($this->checkFolder($this->mainPathUpload,$this->owner->id,$this->type, $this->thumb)){
 
                 $name = Yii::$app->security->generateRandomString(12);
-                $path = $this->getPath().$name.'.'.$data[0]->extension;
+                $path = $this->getPath().$name.'.jpg';
+                $dbPath = $this->getWebPath().$name.'.jpg';
 
-                $dbPath = $this->getWebPath().$name.'.'.$data[0]->extension;
                 $dbThumbPath = null;
-
+                //upload files for temp directory
+                $tempName = $name.'.jpg';
+                file_put_contents($this->getTempPath().$tempName, $data);
 
                 if($this->thumb){
-                    $thumbPath = $this->getPath().'thumb/'.$name.'.'.$data[0]->extension;
-                    $dbThumbPath =$this->getWebPath().'thumb/'.$name.'.'.$data[0]->extension;
-
-                    Image::resize($data[0]->tempName,300,300)
-                        ->save($thumbPath); //['jpeg_quality' => 75]
+                    $thumbPath = $this->getPath().'thumb/'.$name.'.jpg';
+                    $dbThumbPath =$this->getWebPath().'thumb/'.$name.'.jpg';
+                    Image::thumbnail($this->getTempPath().$tempName,450,null)
+                        ->save($thumbPath,['jpeg_quality' => 75]); //['jpeg_quality' => 75]
                 }
 
-                Image::resize($data[0]->tempName,1280,800)
-                        ->save($path); //['png_compression_level' => 1-9]
+                Image::thumbnail($this->getTempPath().$tempName,1024,null)
+                        ->save($path,['jpeg_quality' => 75]); //['png_compression_level' => 1-9]
 
-                $this->saveDB($dbPath,$dbThumbPath,$id);
+                $this->saveDB($dbPath,$dbThumbPath,$this->owner->id);
             }
 
             else {
@@ -109,10 +147,6 @@ class AttachGallery extends Behavior
             $thumb==true ?  FileHelper::createDirectory($path.'/'.$type.'/'.$id.'/thumb') : null;
             return true;
         }
-        else {
-
-        }
-
         return true;
     }
 
@@ -120,45 +154,82 @@ class AttachGallery extends Behavior
         return $this->mainPathUpload.'/'.$this->type.'/'.$this->owner->id.'/';
     }
 
+    public function getTempPath(){
+        if(!is_dir($this->mainPathUpload.'/_temp/'.Yii::$app->user->getId())){
+            FileHelper::createDirectory($this->mainPathUpload.'/_temp/'.Yii::$app->user->getId());
+        }
+        return $this->mainPathUpload.'/_temp/'.Yii::$app->user->getId().'/';
+    }
+
     public function getWebPath(){
         return '/uploads/'.$this->type.'/'.$this->owner->id.'/';
     }
-
 
     public function removeFolder($path){
         FileHelper::removeDirectory($path);
     }
 
+    public function getBase64Data($array){
+        $data = [];
+        if(count($array)==1){
+            $data[] = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $array[0]));
+        }
+        elseif (count($array)>1){
+            foreach ($array as $item){
+                $data[] = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $item));
+            }
+        }
+
+        return $data;
+    }
 
 
 
-
-    public function uploadArrayImages($data,$id=null,$type=null){
-
+    public function uploadArrayImages($data){
+        foreach ($data as $item){
+            $this->uploadImage($item,$this->owner->id, $this->type);
+        }
     }
 
     public function setImages($event){
-        $images = UploadedFile::getInstancesByName($this->getInputName());
-        if (!$images) return false;
+        $item = Yii::$app->request->post($this->inputName);
+        if(empty($item)){
+            return false;
+        }
+        $decode_data = $this->getBase64Data($item);
         if($this->mode==='single' && !is_null($this->mainPathUpload)){
-            $this->uploadImage($images,$this->owner->id, $this->type);
+            $this->uploadImage($decode_data);
         }
         else {
-            $this->uploadArrayImages($images,$this->owner->id, $this->type);
+            $this->uploadArrayImages($decode_data);
+            //return false;
         }
     }
 
     public function updateImages ($event) {
-        $images = UploadedFile::getInstancesByName($this->getInputName());
-        if (!$images) return false;
-
-        if(!is_null($this->owner->id) && !is_null($this->type)) {
-            Gallery::deleteAll(['assign_id'=>$this->owner->id,'type'=>$this->type]);
+        $item = Yii::$app->request->post($this->inputName);
+        if(empty($item)){
+            return false;
+        }
+        $decode_data = $this->getBase64Data($item);
+        if($this->mode==='single' && !is_null($this->mainPathUpload)){
+            if(!is_null($this->owner->id) && !is_null($this->type)) {
+                Gallery::deleteAll(['assign_id'=>$this->owner->id,'type'=>$this->type]);
+                $this->uploadImage($decode_data);
+            }
+        }
+        else {
+            if(!is_null($this->owner->id) && !is_null($this->type)) {
+                Gallery::deleteAll(['assign_id'=>$this->owner->id,'type'=>$this->type]);
+                $this->uploadArrayImages($decode_data);
+            }
         }
 
-        //var_dump($images, $this->owner->id, $this->type);
 
-        $this->uploadImage($images,$this->owner->id, $this->type);
+
+
+
+        $this->uploadImage($decode_data,$this->owner->id, $this->type);
     }
 
     public function removeImages($event) {

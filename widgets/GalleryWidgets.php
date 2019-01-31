@@ -26,22 +26,17 @@ class GalleryWidgets extends Widget
      */
     public  $template = 'index';
     public  $model = null;
+    public  $max = 10;
     public  $type=null;
     public  $params=null;
     private $data;
 
     public function init(){
         parent::init();
-        //$this->registerTranslations();
         if ($this->model!==null && $this->type!==null){
-//            if(!$this->data =Gallery::getData($this->model->id, $this->type)){
-//                $this->data = new Gallery();
-//            }
             $this->data =Gallery::getData($this->model->id, $this->type);
-
         }
         else {
-            //$this->data= new Gallery();
             throw new \ErrorException('model is required attribute');
         }
     }
@@ -56,11 +51,11 @@ class GalleryWidgets extends Widget
                 case 'showMultiple':
                     $this->template="showMultiple";
                     break;
-                case 'addMultiple':
-                    $this->template="addMultiple";
+                case 'single':
+                    $this->template="single";
                     break;
-                case 'addSingle':
-                    $this->template="addSingle";
+                case 'multiple':
+                    $this->template="multiple";
                     break;
             }
         }
@@ -74,27 +69,31 @@ class GalleryWidgets extends Widget
         $this->initParams();
 
         return $this->render($this->template,
-                            ['data'=>$this->data,'className'=>$this->params['className']]
+                            [   'data'=>$this->data,
+                                'modelType'=>$this->type,
+                                'modelId'=>$this->model->id,
+                                'max'=>$this->max,
+                                'className'=>$this->params['className']]
                             );
 
     }
 
-    public function registerTranslations()
-    {
-        $i18n = Yii::$app->i18n;
-        $i18n->translations['widgets/menu/*'] = [
-            'class' => 'yii\i18n\PhpMessageSource',
-            'sourceLanguage' => 'ru-RU',
-            'basePath' => '@vendor/johnproza/yii2-gallery/messages',
-            'fileMap' => [
-                'messages' => 'gallery.php',
-            ],
-        ];
-    }
-
-    public static function t($category, $message, $params = [], $language = null)
-    {
-        return Yii::t('message/' . $category, $message, $params, $language);
-    }
+//    public function registerTranslations()
+//    {
+//        $i18n = Yii::$app->i18n;
+//        $i18n->translations['widgets/menu/*'] = [
+//            'class' => 'yii\i18n\PhpMessageSource',
+//            'sourceLanguage' => 'ru-RU',
+//            'basePath' => '@vendor/johnproza/yii2-gallery/messages',
+//            'fileMap' => [
+//                'messages' => 'gallery.php',
+//            ],
+//        ];
+//    }
+//
+//    public static function t($category, $message, $params = [], $language = null)
+//    {
+//        return Yii::t('message/' . $category, $message, $params, $language);
+//    }
 
 }

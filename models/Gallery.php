@@ -66,6 +66,10 @@ class Gallery extends \yii\db\ActiveRecord
         return Gallery::find()->where(['assign_id'=>$id,'type'=>$type])->limit(1)->one();
     }
 
+    static function getAllData($id,$type){
+        return Gallery::find()->where(['assign_id'=>$id,'type'=>$type])->all();
+    }
+
     static function remove($id,$type){
         return Gallery::deleteAll(['assign_id' =>$id, 'type'=>$type]);
     }

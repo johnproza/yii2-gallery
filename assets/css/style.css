@@ -26,9 +26,6 @@
   margin: 0px;
   margin-bottom: 10px;
 }
-#gallery input {
-  display: none;
-}
 #gallery label {
   width: 100%;
   padding: 10px;
@@ -49,12 +46,13 @@
   padding: 10px 15px;
   height: auto;
 }
-#galleryList {
-  list-style: none;
-  padding: 0px;
-  margin: 0px;
-  display: flex;
-  flex-flow: row wrap;
+#gallery .gallery .itemGallery {
+  margin: 20px 0 0 0px;
+  border: 1px solid #ccc;
+  padding: 10px;
+}
+#gallery .gallery .itemGallery img {
+  width: 200px;
 }
 #galleryList li {
   flex: 1 0 250px;
@@ -71,5 +69,13 @@
   max-width: 100%;
   max-height: 100%;
   display: block;
+}
+#galleryList .itemGallery {
+  margin: 20px 0 0 0px;
+  border: 1px solid #ccc;
+  padding: 10px;
+}
+#galleryList .itemGallery img {
+  width: 200px;
 }
 /*# sourceMappingURL=style.css.map */

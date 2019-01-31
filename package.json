@@ -1,0 +1,58 @@
+{
+  "name": "gallery-crop-vs-sortable",
+  "version": "0.0.1",
+  "description": "some elements for view in the comments",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "SET \"NODE_ENV=development\" && webpack",
+    "prod": "SET \"NODE_ENV=production\" && webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/johnproza/yii2-gallery.git"
+  },
+  "keywords": [
+    "react",
+    "gallery",
+    "gallery-crop",
+    "yii2-gallery-crop-sortable"
+  ],
+  "author": "Ivan Proza",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/johnproza/yii2-gallery/issues"
+  },
+  "homepage": "https://github.com/johnproza/yii2-gallery#readme",
+  "dependencies": {
+    "@babel/core": "^7.2.2",
+    "@babel/plugin-proposal-class-properties": "^7.2.3",
+    "@babel/plugin-syntax-dynamic-import": "^7.2.0",
+    "@babel/plugin-transform-runtime": "^7.2.0",
+    "@babel/preset-env": "^7.2.3",
+    "@babel/preset-es2017": "^7.0.0-beta.53",
+    "@babel/preset-react": "^7.0.0",
+    "@babel/runtime": "^7.2.0",
+    "babel-loader": "^8.0.5",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-es2017": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "babel-preset-stage-0": "^6.24.1",
+    "croppie": "^2.6.3",
+    "react": "^16.6.1",
+    "react-cropper": "^1.0.1",
+    "react-dom": "^16.6.1",
+    "react-file-reader": "^1.1.4",
+    "webpack": "^4.28.3",
+    "webpack-cli": "^3.2.0"
+  },
+  "devDependencies": {
+    "css-loader": "^1.0.1",
+    "less-loader": "^4.1.0",
+    "mini-css-extract-plugin": "^0.4.4",
+    "style-loader": "^0.22.1",
+    "uglifyjs-webpack-plugin": "^2.1.1"
+  }
+}
