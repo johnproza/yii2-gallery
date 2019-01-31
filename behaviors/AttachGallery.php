@@ -6,6 +6,7 @@
  * Time: 0:44
  */
 namespace oboom\gallery\behaviors;
+use Imagine\Image\Box;
 use Yii;
 use yii\base\Behavior;
 use yii\db\ActiveRecord;
@@ -22,7 +23,7 @@ class AttachGallery extends Behavior
     public $thumb = true;
     public $mainPathUpload = 'frontend/web/uploads/';
     public $mode ='single';
-    public $quality =100;
+    public $quality =75;
     public $inputName = 'storage';
     public $type = null;
     public $thumbSize = [
@@ -35,7 +36,7 @@ class AttachGallery extends Behavior
 
         if ($this->quality > 100) {
             $this->quality = 75;
-        } elseif ($this->quality < 0) {
+        } elseif ($this->quality <= 0) {
             $this->quality = 75;
         }
 
@@ -45,8 +46,6 @@ class AttachGallery extends Behavior
     {
         return [
             ActiveRecord::EVENT_BEFORE_UPDATE => 'setImages',
-            //ActiveRecord::EVENT_BEFORE_UPDATE => 'updateImages',
-            //ActiveRecord::EVENT_BEFORE_INSERT => 'setImages',
             ActiveRecord::EVENT_AFTER_INSERT => 'setImages',
             ActiveRecord::EVENT_BEFORE_DELETE => 'removeImages',
         ];
@@ -55,16 +54,6 @@ class AttachGallery extends Behavior
     public function getInputName()
     {
         return $this->inputName;
-    }
-
-    public function getGalleryMode()
-    {
-        return $this->mode;
-    }
-
-    public function setGalleryPath()
-    {
-        return $this->mode;
     }
 
     private function saveDB($path,$thumbPath,$owner){
@@ -77,37 +66,6 @@ class AttachGallery extends Behavior
     }
 
 
-
-//    public function uploadImage($data,$id=null,$type=null){
-//        if(!is_null($id) && !is_null($type)){
-//            if($this->checkFolder($this->mainPathUpload,$id,$type, $this->thumb)){
-//
-//                $name = Yii::$app->security->generateRandomString(12);
-//                $path = $this->getPath().$name.'.'.$data[0]->extension;
-//
-//                $dbPath = $this->getWebPath().$name.'.'.$data[0]->extension;
-//                $dbThumbPath = null;
-//
-//
-//                if($this->thumb){
-//                    $thumbPath = $this->getPath().'thumb/'.$name.'.'.$data[0]->extension;
-//                    $dbThumbPath =$this->getWebPath().'thumb/'.$name.'.'.$data[0]->extension;
-//                    //var_dump($dbThumbPath.'jpg');
-//                    Image::crop($data[0]->tempName,$this->thumbSize['x'],$this->thumbSize['y'])
-//                        ->save($thumbPath); //['jpeg_quality' => 75]
-//                }
-//
-//                Image::resize($data[0]->tempName,1280)
-//                        ->save($path); //['png_compression_level' => 1-9]
-//
-//                $this->saveDB($dbPath,$dbThumbPath,$id);
-//            }
-//
-//            else {
-//                throw new \ErrorException('type and id are required attribute');
-//            }
-//        }
-//    }
 
     public function uploadImage($data){
         if(!is_null($this->owner->id) && !is_null($this->type)){
@@ -125,14 +83,19 @@ class AttachGallery extends Behavior
                 if($this->thumb){
                     $thumbPath = $this->getPath().'thumb/'.$name.'.jpg';
                     $dbThumbPath =$this->getWebPath().'thumb/'.$name.'.jpg';
-                    Image::thumbnail($this->getTempPath().$tempName,450,null)
-                        ->save($thumbPath,['jpeg_quality' => 75]); //['jpeg_quality' => 75]
+                    Image::thumbnail($this->getTempPath().$tempName,$this->thumbSize['x'],null)
+                        ->save($thumbPath,['jpeg_quality' => $this->quality]); //['jpeg_quality' => 75]
                 }
 
-                Image::thumbnail($this->getTempPath().$tempName,1024,null)
-                        ->save($path,['jpeg_quality' => 75]); //['png_compression_level' => 1-9]
+                Image::watermark($this->getTempPath().$tempName,$this->mainPathUpload.'./watermark.png',[0,0])
+                    ->thumbnail(new Box(1024,1024))->save($path,['jpeg_quality' => $this->quality]);
+//                Image::thumbnail($this->getTempPath().$tempName,1024,null)
+//                        ->save($path,['jpeg_quality' => $this->quality]); //['png_compression_level' => 1-9]
 
                 $this->saveDB($dbPath,$dbThumbPath,$this->owner->id);
+
+
+                $this->removeFolder($this->getTempPath());
             }
 
             else {

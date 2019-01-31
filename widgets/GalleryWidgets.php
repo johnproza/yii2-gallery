@@ -24,11 +24,14 @@ class GalleryWidgets extends Widget
      *                      show => show image
      *                      add => show upload form
      */
-    public  $template = 'index';
+    public  $template = 'upload';
     public  $model = null;
     public  $max = 10;
     public  $type=null;
-    public  $params=null;
+    public  $params=[
+        'type'=>'single',
+        'className'=>'foto'
+    ];
     private $data;
 
     public function init(){
@@ -52,10 +55,10 @@ class GalleryWidgets extends Widget
                     $this->template="showMultiple";
                     break;
                 case 'single':
-                    $this->template="single";
+                    $this->template="upload";
                     break;
                 case 'multiple':
-                    $this->template="multiple";
+                    $this->template="upload";
                     break;
             }
         }
@@ -72,6 +75,7 @@ class GalleryWidgets extends Widget
                             [   'data'=>$this->data,
                                 'modelType'=>$this->type,
                                 'modelId'=>$this->model->id,
+                                'mode'=>$this->params['type'],
                                 'max'=>$this->max,
                                 'className'=>$this->params['className']]
                             );

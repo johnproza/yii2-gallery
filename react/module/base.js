@@ -1,12 +1,12 @@
 import React,{Component} from "react";
-import ReactDOM from 'react-dom';
-import Top from './gallery/top';
+//import ReactDOM from 'react-dom';
+//import Top from './gallery/top';
 import Ajax from './../module/ajax/index';
 import Cropper from './gallery/cropper'
 import ReactFileReader from 'react-file-reader';
-import Message from './gallery/message';
+//import Message from './gallery/message';
 import Preloader from './gallery/preloader';
-import Form from './gallery/form';
+//import Form from './gallery/form';
 
 export default class Base extends Component {
 
@@ -19,20 +19,17 @@ export default class Base extends Component {
             item:[],
             cropModal:false,
 
-            id :    elem !=undefined ?   elem.getAttribute('data-id') : null,
-            type :  elem !=undefined ?   elem.getAttribute('data-type') : null,
-            max :   elem !=undefined ?   elem.getAttribute('data-max') : null,
+            id :     elem !=undefined ?   elem.getAttribute('data-id') : null,
+            type :   elem !=undefined ?   elem.getAttribute('data-type') : null,
+            max :    elem !=undefined && elem.getAttribute('data-mode')!="single" ?   elem.getAttribute('data-max') : 1,
             host :   elem !=undefined ?   elem.getAttribute('data-host') : null,
 
-            entity : 123,
+
             hideMessage:true,
-            totalShow : 3,
             textMessage:'',
             files:[],
 
             items : [],
-            previewData:null,
-            showAll:false,
             preloader:false
         }
 
@@ -46,7 +43,7 @@ export default class Base extends Component {
         return (
 
             <div className="gallery">
-                {/*{this.state.previewData == null ? <p>Комментариев пока не найдено</p> : null}*/}
+                {!this.state.hideMessage ? <div className="message">{this.state.textMessage}</div> : null}
                 {this.state.preloader ? <Preloader /> :
 
                     <div>
@@ -82,8 +79,10 @@ export default class Base extends Component {
                                 this.state.data.map((item,i)=>
                                     <div className={"itemGallery"} key={i}>
                                         <input type={"hidden"} name={`storage[${i}]`} hidden={true} defaultValue={item.base64} />
-                                        <img src={item.base64} className={"image"}/>
-                                        <i onClick={this.removeCrop} data-id={i}>remove</i>
+                                        <div className={"image"}>
+                                            <img src={item.base64} className={"image"}/>
+                                            <i onClick={this.removeCrop} data-id={i} className={"btn btn-danger btn-sm"}>remove</i>
+                                        </div>
                                     </div>
                                 )
                                 :null
@@ -93,8 +92,14 @@ export default class Base extends Component {
                             this.state.items.length!=0 ?
                                 this.state.items.map((item,i)=>
                                     <div className={"itemGallery"} key={item.id}>
-                                        <img src={`${this.state.host}/${item.thumb_path}`} className={"image"}/>
-                                        <i onClick={this.removeFromDB} data-id={item.id}>remove</i>
+                                        <div className={"image"}>
+                                            <img src={`${this.state.host}/${item.thumb_path}`} className={"image"}/>
+                                            <div className="btn-group" role="group" aria-label="Basic example">
+                                                <i onClick={this.removeFromDB} data-id={item.id} className={"btn btn-danger btn-sm"}>remove</i>
+                                                <i data-id={item.id} className={"btn btn-secondary btn-sm"}>update</i>
+                                                <i onClick={this.mainImage} data-id={item.id} className={"btn btn-success btn-sm"}>main</i>
+                                            </div>
+                                        </div>
                                     </div>
                                 )
                                 :null
@@ -140,6 +145,7 @@ export default class Base extends Component {
         })
     }
 
+    //set base64 crop item into storage
     setCropData = (file) => {
         this.setState({
             data : [...this.state.data,file],
@@ -148,6 +154,7 @@ export default class Base extends Component {
         console.log(file);
     }
 
+    //get foto base64 for crop
     handleFiles = (files) => {
         this.setState({
             item:files.base64,
@@ -156,35 +163,45 @@ export default class Base extends Component {
     }
 
 
-
-
-    getAllData = () =>{
+    mainImage = (e) =>{
+        console.log('remove');
         Ajax({
-            "url":`/comments/default/get-all`,
+            "url":`/gallery/base/main`,
             "method":'GET',
             "csrf":true,
-            "headers": 0, //Показать заголовки ответа
-            "data":{entity:this.state.entity}
+            "data":{
+                id : e.currentTarget.getAttribute('data-id'),
+            }
         }).then(res =>{
-
-            this.setState({
-                data : [...res.response.data],
-                showAll:true,
-                preloader:false
-            })
-
-            if(NODE_ENV==="development") {
-                console.log('------get all list company data-------',res);
+            console.log(res.response)
+            if(res.response.status){
+                this.message(res.response.message);
             }
         })
-
     }
+
+
+
+
 
     removeFromDB = (e) =>{
         let id = e.currentTarget.getAttribute('data-id');
         const data = this.state.items.filter((item,i) => item.id != id);
-        console.log('db',id,data);
-        this.setState({items:data})
+        console.log('remove');
+        Ajax({
+            "url":`/gallery/base/remove`,
+            "method":'GET',
+            "csrf":true,
+            "data":{
+                id : id,
+            }
+        }).then(res =>{
+            if(res.response.status){
+                this.setState({items:data})
+                this.message(res.response.message);
+            }
+        });
+
 
     }
 
@@ -196,9 +213,7 @@ export default class Base extends Component {
     }
 
 
-    showMore = () => {
-        console.log('more')
-    }
+
 
     message = (m) =>{
         this.setState({

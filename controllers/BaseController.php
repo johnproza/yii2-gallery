@@ -17,46 +17,94 @@ use yii\data\ArrayDataProvider;
 class BaseController extends Controller
 {
 
-//    public function behaviors()
-//    {
-////        return [
-////
-////            'verbs' => [
-////                'class' => VerbFilter::class,
-////                'actions' => [
-////                    'index' => ['post'],
-////                    'delete' => ['post', 'delete'],
-////                ],
-////            ],
-////        ];
-//    }
-
-    public function actionIndex($id=null,$type=null){
-
-
-    }
 
     public function actionData($id=null,$type=null){
 
-        if(Yii::$app->request->isPost && !Yii::$app->user->getIsGuest()){
-            var_dump($id,$type);
+        if(!Yii::$app->user->getIsGuest() && Yii::$app->request->isGet){
+            $data = Gallery::getAllData($id,$type);
+            if($data){
+                return $this->asJson([
+                    'status' => true,
+                    'data' => $data,
+                    'id'=>$id,
+                    'type'=>$type
+
+                ]);
+            }
+
+            else {
+                return $this->asJson([
+                    'status' => false,
+                    'message' => 'No data'
+                ]);
+            }
         }
+    }
 
-        $data = Gallery::getAllData($id,$type);
-        if($data){
-            return $this->asJson([
-                'status' => true,
-                'data' => $data,
-                'id'=>$id,
-                'type'=>$type
+    public function actionMain($id=null){
 
-            ]);
+        if(!Yii::$app->user->getIsGuest() && Yii::$app->request->isGet){
+            $data = Gallery::findOne($id);
+            $allData = Gallery::find()->where(['assign_id'=>$data->assign_id, 'type'=>$data->type])->all();
+            foreach ($allData as $item) {
+                $item->is_main = 0;
+                $item->save();
+            }
+
+            $data->is_main = 1;
+
+            if($data->save()){
+                return $this->asJson([
+                    'status' => true,
+                    'data' => $allData,
+                    'message'=>"Данные обновлены",
+
+                ]);
+            }
+
+            else {
+                return $this->asJson([
+                    'status' => false,
+                    'message' => 'нет прав на просмотр'
+                ]);
+            }
         }
 
         else {
             return $this->asJson([
                 'status' => false,
-                'message' => 'No data'
+                'message' => 'нет прав на просмотр'
+            ]);
+        }
+
+    }
+
+    public function actionRemove($id=null){
+
+        if(!Yii::$app->user->getIsGuest() && Yii::$app->request->isGet){
+            $data = Gallery::findOne($id);
+            unlink(Yii::$app->params['uploadPath'].$data->thumb_path);
+            unlink(Yii::$app->params['uploadPath'].$data->path);
+
+            if($data->delete()){
+                return $this->asJson([
+                    'status' => true,
+                    'message'=>"Фото удалено",
+                ]);
+            }
+
+            else {
+                return $this->asJson([
+                    'status' => false,
+                    'message' => 'нет прав на просмотр'
+                ]);
+            }
+        }
+
+        else {
+            return $this->asJson([
+                'status' => false,
+                'message' => 'нет прав на просмотр'
             ]);
         }
 
