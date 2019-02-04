@@ -26,23 +26,27 @@ export  default class Crop extends Component {
 
 
     render() {
+
+        const aspectRatio = this.props.aspectRatio.split('/');
         return (
             <div style={{width: '100%'}}>
                 <Cropper
                     ref={this.cropper}
+                    style={{height: 400, width: '100%'}}
                     src={this.props.image}
                     modal={true}
                     zoomable={false}
                     zoomOnWheel={false}
                     //aspectRatio={1 / 1}
-                    aspectRatio={16 / 9}
+                    aspectRatio={ aspectRatio[0] / aspectRatio[1]}
                     guides={false}
                     //crop={this.crop}
+                    viewMode={2}
                      />
                 {/*{this.crop()}*/}
                 {/*<input type='text' ref={this.alt} name='alt' placeholder={'alt'}/>*/}
                 {/*<input type='text' ref={this.title} name='title' placeholder={'title'}/>*/}
-                <input type='button' name='send' defaultValue={'crop'} onClick={this.crop}/>
+                <input type='button' name='send' defaultValue={'crop'} onClick={this.crop} className={'btn btn-danger btn-md'} style={{margin: '20px'}}/>
 
             </div>
         );

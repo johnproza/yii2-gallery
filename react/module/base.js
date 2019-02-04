@@ -23,7 +23,7 @@ export default class Base extends Component {
             type :   elem !=undefined ?   elem.getAttribute('data-type') : null,
             max :    elem !=undefined && elem.getAttribute('data-mode')!="single" ?   elem.getAttribute('data-max') : 1,
             host :   elem !=undefined ?   elem.getAttribute('data-host') : null,
-
+            aspectRatio : elem !=undefined ?   elem.getAttribute('data-aspect-ratio') : null,
 
             hideMessage:true,
             textMessage:'',
@@ -50,7 +50,7 @@ export default class Base extends Component {
 
                         {this.state.cropModal ?
                             <div className="col-md-12">
-                                <Cropper image={this.state.item} setData={this.setCropData}/>
+                                <Cropper image={this.state.item} setData={this.setCropData} aspectRatio={this.state.aspectRatio}/>
                             </div> :null}
 
                         { this.state.data.length + this.state.items.length < this.state.max ?

@@ -23,6 +23,7 @@ class AttachGallery extends Behavior
     public $thumb = true;
     public $mainPathUpload = 'frontend/web/uploads/';
     public $mode ='single';
+    public $original =true;
     public $quality =75;
     public $inputName = 'storage';
     public $type = null;
@@ -74,11 +75,14 @@ class AttachGallery extends Behavior
                 $name = Yii::$app->security->generateRandomString(12);
                 $path = $this->getPath().$name.'.jpg';
                 $dbPath = $this->getWebPath().$name.'.jpg';
-
                 $dbThumbPath = null;
+
                 //upload files for temp directory
+
                 $tempName = $name.'.jpg';
                 file_put_contents($this->getTempPath().$tempName, $data);
+
+                //save thumb
 
                 if($this->thumb){
                     $thumbPath = $this->getPath().'thumb/'.$name.'.jpg';
@@ -87,14 +91,21 @@ class AttachGallery extends Behavior
                         ->save($thumbPath,['jpeg_quality' => $this->quality]); //['jpeg_quality' => 75]
                 }
 
+                //save original
+
+                if($this->original){
+                    if(!is_dir($this->getPath().'original/')){
+                        FileHelper::createDirectory($this->getPath().'original/');
+                    }
+                    Image::thumbnail($this->getTempPath().$tempName,$this->thumbSize['x'],null)->save($this->getPath().'original/'.$name.'_original.jpg',['jpeg_quality' => $this->quality]);
+                }
+
+                //save original
                 Image::watermark($this->getTempPath().$tempName,$this->mainPathUpload.'./watermark.png',[0,0])
                     ->thumbnail(new Box(1024,1024))->save($path,['jpeg_quality' => $this->quality]);
-//                Image::thumbnail($this->getTempPath().$tempName,1024,null)
-//                        ->save($path,['jpeg_quality' => $this->quality]); //['png_compression_level' => 1-9]
+
 
                 $this->saveDB($dbPath,$dbThumbPath,$this->owner->id);
-
-
                 $this->removeFolder($this->getTempPath());
             }
 

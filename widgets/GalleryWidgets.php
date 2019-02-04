@@ -30,7 +30,8 @@ class GalleryWidgets extends Widget
     public  $type=null;
     public  $params=[
         'type'=>'single',
-        'className'=>'foto'
+        'className'=>'foto',
+        'aspectRatio'=>[1,1]
     ];
     private $data;
 
@@ -74,6 +75,7 @@ class GalleryWidgets extends Widget
         return $this->render($this->template,
                             [   'data'=>$this->data,
                                 'modelType'=>$this->type,
+                                'aspectRatio'=>$this->params['aspectRatio'],
                                 'modelId'=>$this->model->id,
                                 'mode'=>$this->params['type'],
                                 'max'=>$this->max,
@@ -81,23 +83,5 @@ class GalleryWidgets extends Widget
                             );
 
     }
-
-//    public function registerTranslations()
-//    {
-//        $i18n = Yii::$app->i18n;
-//        $i18n->translations['widgets/menu/*'] = [
-//            'class' => 'yii\i18n\PhpMessageSource',
-//            'sourceLanguage' => 'ru-RU',
-//            'basePath' => '@vendor/johnproza/yii2-gallery/messages',
-//            'fileMap' => [
-//                'messages' => 'gallery.php',
-//            ],
-//        ];
-//    }
-//
-//    public static function t($category, $message, $params = [], $language = null)
-//    {
-//        return Yii::t('message/' . $category, $message, $params, $language);
-//    }
 
 }
