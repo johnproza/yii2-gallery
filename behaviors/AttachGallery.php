@@ -101,7 +101,7 @@ class AttachGallery extends Behavior
                 }
 
                 //save original
-                Image::watermark($this->getTempPath().$tempName,$this->mainPathUpload.'./watermark.png',[0,0])
+                Image::watermark($this->getTempPath().$tempName,$this->mainPathUpload.'/watermark.png',[0,0])
                     ->thumbnail(new Box(1024,1024))->save($path,['jpeg_quality' => $this->quality]);
 
 

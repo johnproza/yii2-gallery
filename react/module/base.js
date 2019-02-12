@@ -1,6 +1,10 @@
 import React,{Component} from "react";
-//import ReactDOM from 'react-dom';
-//import Top from './gallery/top';
+import {
+    arrayMove,
+} from 'react-sortable-hoc';
+
+//import sortableList from 'sortable/sortable';
+
 import Ajax from './../module/ajax/index';
 import Cropper from './gallery/cropper'
 import ReactFileReader from 'react-file-reader';
@@ -91,8 +95,10 @@ export default class Base extends Component {
                         {
                             this.state.items.length!=0 ?
                                 this.state.items.map((item,i)=>
+
                                     <div className={"itemGallery"} key={item.id}>
-                                        <div className={"image"}>
+                                        {/*<SortableItem key={`item-${i}`} index={i} value={item} />*/}
+                                        <div className={item.is_main==1 ? "image main" : "image"}>
                                             <img src={`${this.state.host}/${item.thumb_path}`} className={"image"}/>
                                             <div className="btn-group" role="group" aria-label="Basic example">
                                                 <i onClick={this.removeFromDB} data-id={item.id} className={"btn btn-danger btn-sm"}>remove</i>
@@ -163,6 +169,13 @@ export default class Base extends Component {
     }
 
 
+    onSortEnd = ({oldIndex, newIndex}) => {
+        console.log( oldIndex, newIndex)
+        // this.setState(({items}) => ({
+        //     items: arrayMove(items, oldIndex, newIndex),
+        // }));
+    };
+
     mainImage = (e) =>{
         console.log('remove');
         Ajax({
@@ -179,10 +192,6 @@ export default class Base extends Component {
             }
         })
     }
-
-
-
-
 
     removeFromDB = (e) =>{
         let id = e.currentTarget.getAttribute('data-id');

@@ -28,6 +28,7 @@ class GalleryWidgets extends Widget
     public  $model = null;
     public  $max = 10;
     public  $type=null;
+    public  $show_main = false;
     public  $params=[
         'type'=>'single',
         'className'=>'foto',
@@ -38,7 +39,13 @@ class GalleryWidgets extends Widget
     public function init(){
         parent::init();
         if ($this->model!==null && $this->type!==null){
-            $this->data =Gallery::getData($this->model->id, $this->type);
+            if($this->params['type']=="showSingle") {
+                $this->data =Gallery::getData($this->model->id, $this->type, $this->show_main);
+                //var_dump($this->data);
+            }
+            else {
+                $this->data =Gallery::getAllData($this->model->id, $this->type);
+            }
         }
         else {
             throw new \ErrorException('model is required attribute');

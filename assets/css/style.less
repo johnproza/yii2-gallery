@@ -69,7 +69,24 @@
           width: 200px;
           margin: 10px 0 20px 0px;
         }
+
+        &.main {
+          &:before {
+            content: 'Главная';
+            position: relative;
+            background: #001335;
+            /* top: 10px; */
+            color: #fff;
+            padding: 3px 10px;
+            z-index: 1;
+            font-size: 12px;
+            width: inherit;
+            text-align: center;
+          }
+        }
       }
+
+
 
     }
     .message {

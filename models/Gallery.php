@@ -62,8 +62,10 @@ class Gallery extends \yii\db\ActiveRecord
         ];
     }
 
-    static function getData($id,$type){
-        return Gallery::find()->where(['assign_id'=>$id,'type'=>$type])->limit(1)->one();
+    static function getData($id,$type,$main){
+        $data = Gallery::find()->where(['assign_id'=>$id,'type'=>$type,'is_main'=> $main==true ? 1 :0 ])->limit(1)->one();
+        if(!is_null($data)) return $data;
+        return Gallery::find()->where(['assign_id'=>$id,'type'=>$type,'is_main'=> 0 ])->limit(1)->one();
     }
 
     static function getAllData($id,$type){

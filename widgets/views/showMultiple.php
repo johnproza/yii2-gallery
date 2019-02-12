@@ -12,7 +12,10 @@
 //FrontAssetsBundle::register($this);
 ?>
 <?if (!empty($data)):?>
-show Multiple
-<!--    <img src = "--><?//=Yii::$app->params['webUrl']['front'].$data->thumb_path;?><!--" />-->
-<!--    <p>--><?//=Yii::t('gallery','Send');?><!--</p>-->
+    <ul>
+        <?foreach ($data as $item) :?>
+           <li><img src = "<?=Yii::$app->params['webUrl']['front'].$item->thumb_path;?>"  <?= $className!=null ? "class=".$className : false ;?> /></li>
+        <?endforeach;?>
+    </ul>
 <?endif;?>
+
