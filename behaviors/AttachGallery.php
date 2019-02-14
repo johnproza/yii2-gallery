@@ -28,8 +28,8 @@ class AttachGallery extends Behavior
     public $inputName = 'storage';
     public $type = null;
     public $thumbSize = [
-        'x'=>300,
-        'y'=>300
+        'x'=>100,
+        'y'=>100
     ];
 
     public function init()
@@ -97,7 +97,9 @@ class AttachGallery extends Behavior
                     if(!is_dir($this->getPath().'original/')){
                         FileHelper::createDirectory($this->getPath().'original/');
                     }
-                    Image::thumbnail($this->getTempPath().$tempName,$this->thumbSize['x'],null)->save($this->getPath().'original/'.$name.'_original.jpg',['jpeg_quality' => $this->quality]);
+                    //Image::getImagine($this->getTempPath().$tempName,$this->thumbSize['x'],null)->save($this->getPath().'original/'.$name.'_original.jpg',['jpeg_quality' => $this->quality]);
+                    Image::getImagine()->open($this->getTempPath().$tempName)->save($this->getPath().'original/'.$name.'_original.jpg',['jpeg_quality' => $this->quality]);
+
                 }
 
                 //save original

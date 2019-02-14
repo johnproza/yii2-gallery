@@ -28,10 +28,13 @@ export default class Base extends Component {
             max :    elem !=undefined && elem.getAttribute('data-mode')!="single" ?   elem.getAttribute('data-max') : 1,
             host :   elem !=undefined ?   elem.getAttribute('data-host') : null,
             aspectRatio : elem !=undefined ?   elem.getAttribute('data-aspect-ratio') : null,
+            size:[],
 
             hideMessage:true,
             textMessage:'',
             files:[],
+
+
 
             items : [],
             preloader:false
@@ -54,7 +57,7 @@ export default class Base extends Component {
 
                         {this.state.cropModal ?
                             <div className="col-md-12">
-                                <Cropper image={this.state.item} setData={this.setCropData} aspectRatio={this.state.aspectRatio}/>
+                                <Cropper image={this.state.item} size={this.state.size} setData={this.setCropData} aspectRatio={this.state.aspectRatio}/>
                             </div> :null}
 
                         { this.state.data.length + this.state.items.length < this.state.max ?
@@ -161,11 +164,37 @@ export default class Base extends Component {
     }
 
     //get foto base64 for crop
+
+
     handleFiles = (files) => {
-        this.setState({
-            item:files.base64,
-            cropModal:true,
-        })
+        let img =  new Image();
+        //let crope = this.props.image
+        img.src = files.base64;
+
+        img.onload = () => {
+            const x = img.width;
+            const y = img.height;
+            var imgSize=[];
+            if(x>y) imgSize = [700,500];
+            else  imgSize = [275,600];
+
+            if (x>300 && y>300) {
+                this.setState({
+                    item:files.base64,
+                    size:imgSize,
+                    cropModal:true,
+                })
+            }
+            else{
+                this.message("The size of image must be more then 300*300");
+            }
+
+
+
+
+        }
+
+
     }
 
 

@@ -2,14 +2,15 @@ import React, {Component} from 'react';
 import Cropper from 'react-cropper';
 //import 'cropperjs/dist/cropper.css';
 //var Cropper = require('react-cropper').default;
-
+var size=[];
 export  default class Crop extends Component {
-
     constructor(props) {
         super(props);
         this.cropper = React.createRef();
         this.alt = React.createRef();
         this.title = React.createRef();
+
+
     }
 
     crop = () => {
@@ -28,13 +29,18 @@ export  default class Crop extends Component {
     render() {
 
         const aspectRatio = this.props.aspectRatio.split('/');
+
+
+
         return (
             <div style={{width: '100%'}}>
                 <Cropper
                     ref={this.cropper}
-                    style={{height: 400, width: '100%'}}
+                    style={{ width: this.props.size[0], height:this.props.size[1], background:'#fff'}}
                     src={this.props.image}
                     modal={true}
+                    center={true}
+                    background={false}
                     zoomable={false}
                     zoomOnWheel={false}
                     //aspectRatio={1 / 1}
@@ -42,7 +48,7 @@ export  default class Crop extends Component {
                     guides={false}
                     //crop={this.crop}
                     viewMode={2}
-                     />
+                />
                 {/*{this.crop()}*/}
                 {/*<input type='text' ref={this.alt} name='alt' placeholder={'alt'}/>*/}
                 {/*<input type='text' ref={this.title} name='title' placeholder={'title'}/>*/}
@@ -50,5 +56,16 @@ export  default class Crop extends Component {
 
             </div>
         );
+
+
+
+    }
+
+    componentDidMount() {
+        // console.log(size);
+        // this.setState({
+        //     x: size[0],
+        //     y: size[1],
+        // })
     }
 }
