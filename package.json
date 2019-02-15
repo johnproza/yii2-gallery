@@ -1,6 +1,6 @@
 {
   "name": "gallery-crop-vs-sortable",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "some elements for view in the comments",
   "main": "index.js",
   "scripts": {
