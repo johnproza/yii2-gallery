@@ -110,7 +110,29 @@ class BaseController extends Controller
 
     }
 
+    public function actionMeta($id=null,$alt=null, $title=null){
 
+        if(!Yii::$app->user->getIsGuest() && Yii::$app->request->isGet){
+            $data = Gallery::findOne($id);
+
+            $data->alt =$alt;
+            $data->title=$title;
+            if($data->save()){
+                return $this->asJson([
+                    'status' => true,
+                    'message'=>"Данные обновлены",
+                ]);
+            }
+        }
+
+        else {
+            return $this->asJson([
+                'status' => false,
+                'message' => 'нет прав на просмотр'
+            ]);
+        }
+
+    }
 
 }
 

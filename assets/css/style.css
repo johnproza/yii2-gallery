@@ -50,6 +50,7 @@
   margin: 20px 0 0 0px;
   border: 1px solid #ccc;
   padding: 10px;
+  display: flex;
 }
 #gallery .gallery .itemGallery .image {
   width: 200px;
@@ -69,6 +70,20 @@
   font-size: 12px;
   width: inherit;
   text-align: center;
+}
+#gallery .gallery .itemGallery .info {
+  margin-left: 10px;
+  flex: 1 0 auto;
+}
+#gallery .gallery .itemGallery .info form {
+  width: 100%;
+}
+#gallery .gallery .itemGallery .info form input[type="text"] {
+  width: 100%;
+  margin-bottom: 15px;
+}
+#gallery .gallery .itemGallery.main {
+  border: 1px solid #4a65a6;
 }
 #gallery .gallery .message {
   position: fixed;

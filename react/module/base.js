@@ -99,15 +99,22 @@ export default class Base extends Component {
                             this.state.items.length!=0 ?
                                 this.state.items.map((item,i)=>
 
-                                    <div className={"itemGallery"} key={item.id}>
+                                    <div className={item.is_main==1 ? "itemGallery main" : "itemGallery"} key={item.id}>
                                         {/*<SortableItem key={`item-${i}`} index={i} value={item} />*/}
                                         <div className={item.is_main==1 ? "image main" : "image"}>
                                             <img src={`${this.state.host}/${item.thumb_path}`} className={"image"}/>
                                             <div className="btn-group" role="group" aria-label="Basic example">
-                                                <i onClick={this.removeFromDB} data-id={item.id} className={"btn btn-danger btn-sm"}>remove</i>
-                                                <i data-id={item.id} className={"btn btn-secondary btn-sm"}>update</i>
-                                                <i onClick={this.mainImage} data-id={item.id} className={"btn btn-success btn-sm"}>main</i>
+                                                <i onClick={this.removeFromDB} data-id={item.id} className={"btn btn-danger btn-sm"}>Удалить</i>
+                                                <i onClick={this.mainImage} data-id={item.id} className={"btn btn-success btn-sm"}>Главная</i>
                                             </div>
+                                        </div>
+                                        <div className={'info'}>
+
+                                            <form onSubmit={this.handleSubmitMeta} data-id={item.id}>
+                                                <input type="text" defaultValue={item.alt} className={'form-control alt'} placeholder={'Alt'}/>
+                                                <input type="text" defaultValue={item.title} className={'form-control title'} placeholder={'Title'}/>
+                                                <input type="submit" value="Сохранить" className={"btn btn-danger btn-sm"}/>
+                                            </form>
                                         </div>
                                     </div>
                                 )
@@ -170,7 +177,6 @@ export default class Base extends Component {
         let img =  new Image();
         //let crope = this.props.image
         img.src = files.base64;
-
         img.onload = () => {
             const x = img.width;
             const y = img.height;
@@ -189,12 +195,7 @@ export default class Base extends Component {
                 this.message("The size of image must be more then 300*300");
             }
 
-
-
-
         }
-
-
     }
 
 
@@ -250,8 +251,32 @@ export default class Base extends Component {
         this.setState({data:data})
     }
 
+    handleSubmitMeta = (e) => {
+        e.preventDefault();
+        let id = e.currentTarget.getAttribute('data-id');
+        let alt = e.currentTarget.querySelector('.alt').value;
+        let title = e.currentTarget.querySelector('.title').value;
+        console.log(alt,title)
+        Ajax({
+            "url":`/gallery/base/meta`,
+            "method":'GET',
+            "csrf":true,
+            "data":{
+                id : id,
+                alt : alt,
+                title : title
+            }
+        }).then(res =>{
+            if(res.response.status){
+                this.message(res.response.message);
+            }
+            if(NODE_ENV==="development") {
+                console.log('------get all list company data-------',res.response);
+            }
 
 
+        })
+    }
 
     message = (m) =>{
         this.setState({
@@ -261,7 +286,6 @@ export default class Base extends Component {
 
         this.timeOut(3000)
     }
-
 
     timeOut = (delay) =>{
         setTimeout(()=>{this.setState({hideMessage:true})

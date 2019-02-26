@@ -14,7 +14,6 @@ export  default class Crop extends Component {
     }
 
     crop = () => {
-        //console.log(this.cropper.current.getCanvasData());
         this.props.setData({
             base64 : this.cropper.current.getCroppedCanvas().toDataURL(),
             url : this.cropper.current.getCroppedCanvas().toDataURL(),
@@ -49,23 +48,12 @@ export  default class Crop extends Component {
                     //crop={this.crop}
                     viewMode={2}
                 />
-                {/*{this.crop()}*/}
-                {/*<input type='text' ref={this.alt} name='alt' placeholder={'alt'}/>*/}
-                {/*<input type='text' ref={this.title} name='title' placeholder={'title'}/>*/}
-                <input type='button' name='send' defaultValue={'crop'} onClick={this.crop} className={'btn btn-danger btn-md'} style={{margin: '20px'}}/>
+                <input type='button' name='send' defaultValue={'Обрезать'} onClick={this.crop} className={'btn btn-danger btn-md'} style={{margin: '20px'}}/>
 
             </div>
         );
 
 
 
-    }
-
-    componentDidMount() {
-        // console.log(size);
-        // this.setState({
-        //     x: size[0],
-        //     y: size[1],
-        // })
     }
 }
