@@ -24,7 +24,7 @@ class AttachGallery extends Behavior
     public $mainPathUpload = 'frontend/web/uploads/';
     public $mode ='single';
     public $original =true;
-    public $quality =75;
+    public $quality =95;
     public $inputName = 'storage';
     public $type = null;
     public $thumbSize = [
@@ -158,8 +158,6 @@ class AttachGallery extends Behavior
 
         return $data;
     }
-
-
 
     public function uploadArrayImages($data){
         foreach ($data as $item){

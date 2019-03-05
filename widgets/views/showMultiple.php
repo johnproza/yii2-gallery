@@ -6,10 +6,6 @@
  * Time: 23:21
  */
 
-//use yii\helpers\Url;
-//use oboom\menu\FrontAssetsBundle;
-
-//FrontAssetsBundle::register($this);
 ?>
 <?if (!empty($data)):?>
     <ul>
