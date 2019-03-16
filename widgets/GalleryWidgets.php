@@ -41,10 +41,11 @@ class GalleryWidgets extends Widget
         if ($this->model!==null && $this->type!==null){
             if($this->params['type']=="showSingle") {
                 $this->data =Gallery::getData($this->model->id, $this->type, $this->show_main);
-                //var_dump($this->data);
+
             }
             else {
                 $this->data =Gallery::getAllData($this->model->id, $this->type);
+
             }
         }
         else {
@@ -67,6 +68,7 @@ class GalleryWidgets extends Widget
                     break;
                 case 'multiple':
                     $this->template="upload";
+
                     break;
             }
         }

@@ -46,7 +46,7 @@ export default class Base extends Component {
 
     render(){
         const data = this.state.files.length!=0 ? this.state.files : null;
-        console.log(data);
+        console.log(this.state.items);
         return (
 
             <div className="gallery">
@@ -131,6 +131,9 @@ export default class Base extends Component {
 
 
     componentDidMount(){
+        if(NODE_ENV==="development") {
+
+        }
         if(this.state.id!=null){
             Ajax({
                 "url":`/gallery/base/data`,
@@ -141,13 +144,18 @@ export default class Base extends Component {
                     type : this.state.type
                 }
             }).then(res =>{
-                this.setState({
-                    items : [...res.response.data],
-                })
+                if(res) {
+                    this.setState({
+                        items : [...res.response.data],
+                    })
+                }
+
                 if(NODE_ENV==="development") {
                     console.log('------get all list company data-------',res.response);
                 }
 
+
+            }).catch(res=>{
 
             })
         }
@@ -183,6 +191,8 @@ export default class Base extends Component {
             var imgSize=[];
             if(x>y) imgSize = [700,500];
             else  imgSize = [275,600];
+
+            if(window.innerWidth<700) imgSize = ["100%",600];
 
             if (x>300 && y>300) {
                 this.setState({

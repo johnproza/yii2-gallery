@@ -20,7 +20,7 @@ class BaseController extends Controller
 
     public function actionData($id=null,$type=null){
 
-        if(!Yii::$app->user->getIsGuest() && Yii::$app->request->isGet){
+        if(!Yii::$app->user->isGuest && Yii::$app->request->isGet){
             $data = Gallery::getAllData($id,$type);
             if($data){
                 return $this->asJson([
@@ -39,6 +39,7 @@ class BaseController extends Controller
                 ]);
             }
         }
+
     }
 
     public function actionMain($id=null){
