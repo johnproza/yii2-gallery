@@ -62,7 +62,7 @@ export default class Base extends Component {
 
                         { this.state.data.length + this.state.items.length < this.state.max ?
                             <div>
-                                <ReactFileReader fileTypes={[".png",".jpg"]} base64={true} id={"upload"} name={"Gallery[upload]"} multipleFiles={false} handleFiles={this.handleFiles}>
+                                <ReactFileReader fileTypes={[".png",".jpg",".jpeg",".gif"]} base64={true} id={"upload"} name={"Gallery[upload]"} multipleFiles={false} handleFiles={this.handleFiles}>
                                     {/*<button className='btn'>Upload</button>*/}
                                     <div className="custom-file">
                                         <label className="custom-file-label" htmlFor="upload">
