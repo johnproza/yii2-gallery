@@ -84,8 +84,9 @@ class BaseController extends Controller
 
         if(!Yii::$app->user->getIsGuest() && Yii::$app->request->isGet){
             $data = Gallery::findOne($id);
-            unlink(Yii::$app->params['uploadPath'].$data->thumb_path);
-            unlink(Yii::$app->params['uploadPath'].$data->path);
+            //var_dump();
+            unlink(!is_null(Yii::$app->params['uploadPath']) ? Yii::$app->params['uploadPath'].$data->thumb_path : Yii::$app->system->getValue('uploadPath').$data->thumb_path);
+            unlink(!is_null(Yii::$app->params['uploadPath']) ? Yii::$app->params['uploadPath'].$data->path : Yii::$app->system->getValue('uploadPath').$data->path);
 
             if($data->delete()){
                 return $this->asJson([
